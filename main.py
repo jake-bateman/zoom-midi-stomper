@@ -97,9 +97,9 @@ def recover():
 def set_led(bool):
     
     if bool:
-        subprocess.run(["pinctrl set 25 op dh"])
+        subprocess.run(["pinctrl", "set", "25", "op", "dh"])
     else:
-        subprocess.run(["pinctrl set 25 op dl"])
+        subprocess.run(["pinctrl", "set", "25", "op", "dl"])
 
 def main():
     set_led(0)
