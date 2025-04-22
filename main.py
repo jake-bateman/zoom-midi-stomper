@@ -94,24 +94,43 @@ def recover():
         return recovered_midi_dev
 
 
+def set_led(bool):
+    
+    if bool:
+        subprocess.run(["pinctrl", "set", "25", "op", "dh"])
+    else:
+        subprocess.run(["pinctrl", "set", "25", "op", "dl"])
 
 def main():
-
+    set_led(0)
     print("~~~ Starting ZOOM Patch Switcher ~~~")
     midi_dev = find_midi_device()
     if not midi_dev:
+        set_led(0)
         print("PRANG: No ZOOM pedal found on the MIDI bus.")
-        return
-
+        midi_dev = recover()
+    
+    # assume that at this point all is well and set the LED on
+    set_led(1)
     enable_parameter_editing(midi_dev)
-
+    
+    # poorly named variables. "last known value of the pin connected to the increment switch"
+    # and "last known value of the pin connected to the decrement switch" is what they are.
     last_increment = get_pin_state(GPIO_INCREMENT)
     last_decrement = get_pin_state(GPIO_DECREMENT)
-
+    
+    tick = 0
     print("watching for switch presses...")
     while True:
         val_increment = get_pin_state(GPIO_INCREMENT)
         val_decrement = get_pin_state(GPIO_DECREMENT)
+        
+        # MIDI connection status check every 30 ticks and set LED accordingly 
+        if tick % 30:
+            if find_midi_device() == None:
+                set_led(0)
+            else:
+                set_led(1)
 
         if val_increment == "lo" and last_increment == "hi":
             patch = get_patch_number(midi_dev)
@@ -133,7 +152,9 @@ def main():
 
         last_increment = val_increment
         last_decrement = val_decrement
-
+        
+        tick+=1
+        
         time.sleep(sleep_time)
 
 
