@@ -6,10 +6,10 @@ import re
 from datetime import datetime
 
 # increment switch
-GPIO_INCREMENT = 23
+GPIO_INCREMENT = 24
 
 # decrement switch
-GPIO_DECREMENT = 24
+GPIO_DECREMENT = 23
 
 # poll rate
 sleep_time = 0.01
@@ -44,6 +44,7 @@ def enable_parameter_editing(midi_dev):
 
 
 def get_patch_number(midi_dev):
+    print("saw a switch event. getting patch number.")
     try:
         response = subprocess.check_output(
             ["amidi", "-p", midi_dev, "-S", "f0 52 00 58 33 f7", "-d", "-t", "0.01"],
@@ -53,6 +54,10 @@ def get_patch_number(midi_dev):
         # lower case, repalce newlines with spaces
         response = response.replace("\n", " ").lower().strip()
 
+        if "c0" not in response:
+            print("didn't get any useful data")
+            return get_patch_number(recover())
+
         # match something like "c0 2b"
         match = re.search(r'c0\s*([0-9a-f]{2})', response)
         if match:
@@ -61,10 +66,10 @@ def get_patch_number(midi_dev):
             return patch_dec
     except subprocess.CalledProcessError as e:
         print("prang!", e)
-        return recover()
+        return get_patch_number(recover())
     except Exception as e:
         print("prang!", e)
-        return recover()
+        return get_patch_number(recover())
 
     return None
 
@@ -76,8 +81,8 @@ def set_patch_number(midi_dev, patch_num):
 
 # to be called when things have gone tits up
 def recover():
-    
-    while True: 
+
+    while True:
         print("Lost the midi device. Trying to reacquire...")
         try:
             recovered_midi_dev = find_midi_device()
@@ -85,7 +90,8 @@ def recover():
             sleep(1)
             coninue
 
-        return recovered_midi_device
+        enable_parameter_editing(recovered_midi_dev)
+        return recovered_midi_dev
 
 
 
@@ -133,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
