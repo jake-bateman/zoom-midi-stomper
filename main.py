@@ -60,9 +60,11 @@ def get_patch_number(midi_dev):
             patch_dec = int(patch_hex, 16)
             return patch_dec
     except subprocess.CalledProcessError as e:
-        print("prang!")
+        print("prang!", e)
+        return recover()
     except Exception as e:
-        print("prang!")
+        print("prang!", e)
+        return recover()
 
     return None
 
@@ -70,6 +72,21 @@ def get_patch_number(midi_dev):
 def set_patch_number(midi_dev, patch_num):
     hex_val = f"{patch_num:02x}"
     subprocess.run(["amidi", "-p", midi_dev, "-S", f"c0 {hex_val}"])
+
+
+# to be called when things have gone tits up
+def recover():
+    
+    while True: 
+        print("Lost the midi device. Trying to reacquire...")
+        try:
+            recovered_midi_dev = find_midi_device()
+        except:
+            sleep 1
+            coninue
+
+        return recovered_midi_device
+
 
 
 def main():
