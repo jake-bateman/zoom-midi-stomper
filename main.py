@@ -87,7 +87,7 @@ def recover():
         try:
             recovered_midi_dev = find_midi_device()
         except:
-            sleep(1)
+            sleep(0.3)
             coninue
 
         enable_parameter_editing(recovered_midi_dev)
