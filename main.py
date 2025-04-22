@@ -82,7 +82,7 @@ def recover():
         try:
             recovered_midi_dev = find_midi_device()
         except:
-            sleep 1
+            sleep(1)
             coninue
 
         return recovered_midi_device
