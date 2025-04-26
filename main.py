@@ -158,7 +158,7 @@ def main():
             if scroll_tick % 50:
                 scrolling = True
 
-            if scrolling = True and scroll_tick % 15:
+            if scrolling == True and scroll_tick % 15:
                 new_patch = (patch - 1) % 50
                 set_patch_number(midi_dev, new_patch)
                 print(f"decremented patch to {new_patch}")
@@ -168,7 +168,7 @@ def main():
             if scroll_tick % 50:
                 scrolling = True
 
-            if scrolling = True and scroll_tick % 15:
+            if scrolling == True and scroll_tick % 15:
                 new_patch = (patch + 1) % 50
                 set_patch_number(midi_dev, new_patch)
                 print(f"incremented patch to {new_patch}")
