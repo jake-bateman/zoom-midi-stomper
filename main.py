@@ -149,6 +149,29 @@ def main():
                 new_patch = (patch - 1) % 50
                 set_patch_number(midi_dev, new_patch)
                 print(f"decremented patch to {new_patch}")
+       
+        # inc/dec repeatedly if switch is held
+        scroll_tick = 0
+        scrolling = False
+        while val_decrement == "hi" and last_decrement == "hi":
+            
+            if scroll_tick % 50:
+                scrolling = True
+
+            if scrolling = True and scroll_tick % 15:
+                new_patch = (patch - 1) % 50
+                set_patch_number(midi_dev, new_patch)
+                print(f"decremented patch to {new_patch}")
+
+        while val_increment == "hi" and last_increment == "hi":
+            
+            if scroll_tick % 50:
+                scrolling = True
+
+            if scrolling = True and scroll_tick % 15:
+                new_patch = (patch + 1) % 50
+                set_patch_number(midi_dev, new_patch)
+                print(f"incremented patch to {new_patch}")
 
         last_increment = val_increment
         last_decrement = val_decrement
