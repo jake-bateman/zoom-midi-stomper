@@ -140,7 +140,7 @@ def main():
 
             scroll_tick = 0
             while get_pin_state(GPIO_DECREMENT) == "lo":
-                if scroll_tick > 50 and scroll_tick % 15 == 0:
+                if scroll_tick > 20 and scroll_tick % 8 == 0:
                     patch = get_patch_number(midi_dev)
                     if patch is not None:
                         new_patch = (patch - 1) % 50
@@ -158,7 +158,7 @@ def main():
 
             scroll_tick = 0
             while get_pin_state(GPIO_INCREMENT) == "lo":
-                if scroll_tick > 50 and scroll_tick % 15 == 0:
+                if scroll_tick > 20 and scroll_tick % 8 == 0:
                     patch = get_patch_number(midi_dev)
                     if patch is not None:
                         new_patch = (patch + 1) % 50
