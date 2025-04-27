@@ -152,34 +152,35 @@ def main():
        
         # inc/dec repeatedly if switch is held
         scroll_tick = 0
+
+        while get_pin_state(GPIO_DECREMENT) == "lo":
+            if scroll_tick % 50 == 0:
+                scrolling = True
+
+            if scrolling and scroll_tick % 15 == 0:
+                patch = get_patch_number(midi_dev)
+                if patch is not None:
+                    new_patch = (patch - 1) % 50
+                    set_patch_number(midi_dev, new_patch)
+                    print(f"decremented patch to {new_patch}")
+            scroll_tick += 1
+            time.sleep(sleep_time)
+
+        scroll_tick = 0
         scrolling = False
-        while val_decrement == "hi" and last_decrement == "hi":
-            
-            if scroll_tick % 50:
+
+        while get_pin_state(GPIO_INCREMENT) == "lo":
+            if scroll_tick % 50 == 0:
                 scrolling = True
 
-            if scrolling == True and scroll_tick % 15:
-                new_patch = (patch - 1) % 50
-                set_patch_number(midi_dev, new_patch)
-                print(f"decremented patch to {new_patch}")
-
-        while val_increment == "hi" and last_increment == "hi":
-            
-            if scroll_tick % 50:
-                scrolling = True
-
-            if scrolling == True and scroll_tick % 15:
-                new_patch = (patch + 1) % 50
-                set_patch_number(midi_dev, new_patch)
-                print(f"incremented patch to {new_patch}")
-
-        last_increment = val_increment
-        last_decrement = val_decrement
-        
-        tick+=1
-        
-        time.sleep(sleep_time)
-
+            if scrolling and scroll_tick % 15 == 0:
+                patch = get_patch_number(midi_dev)
+                if patch is not None:
+                    new_patch = (patch + 1) % 50
+                    set_patch_number(midi_dev, new_patch)
+                    print(f"incremented patch to {new_patch}")
+            scroll_tick += 1
+            time.sleep(sleep_time)
 
 if __name__ == "__main__":
     main()
