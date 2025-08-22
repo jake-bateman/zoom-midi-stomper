@@ -9,7 +9,7 @@ This is being written as a Linux/RPi alternative to [maestun's much more impress
 With a systemd service set to restart always. This should cause the Pi to run the program in a fairly fault-tolerant way as soon as it boots. A Pi Zero 2 with some optimisations should boot and begin Pythoning fairly quickly. Something like:
 
 ```
-# /lib/systemd/system/zoom.service
+# /etc/systemd/system/zoom.service
 [Unit]
 Description=Zoom MIDI Stomper
 After=local-fs.target
