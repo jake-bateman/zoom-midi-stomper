@@ -24,6 +24,9 @@ SCROLL_START_DELAY = 0.5
 # time between auto-scroll steps while the button is held
 SCROLL_INTERVAL = 0.3
 
+# timeout for the amidi command asking the pedal for patch number
+AMIDI_TIMEOUT = 0.06
+
 # =========================
 # device functions
 # =========================
@@ -60,7 +63,7 @@ def get_patch_number(midi_dev):
     print("saw a switch event. getting patch number.")
     try:
         response = subprocess.check_output(
-            ["amidi", "-p", midi_dev, "-S", "f0 52 00 58 33 f7", "-d", "-t", "0.01"],
+            ["amidi", "-p", midi_dev, "-S", "f0 52 00 58 33 f7", "-d", "-t", str(AMIDI_TIMEOUT)],
             stderr=subprocess.DEVNULL,
         ).decode()
 
